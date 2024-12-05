@@ -1,5 +1,5 @@
 const mongoose = require('mongoose');
-const bcrpyt = require('bcryptjs'); // Bcrypt do haszowania haseł
+const bcrypt = require('bcryptjs'); // Bcrypt do haszowania haseł
 
 const userSchema = new mongoose.Schema({
     username: {
