@@ -2,7 +2,9 @@ require('dotenv').config();  // Załaduj zmienne środowiskowe z pliku .env
 
 const express = require('express');
 const mongoose = require('mongoose');
-const cors = require('cors');
+const cors = require('cors'); // Import middleware do obsługi CORS
+const authRoutes = require('./routes/authRoutes') // Import tras rejestracji i logowania
+
 const app = express();
 
 // Połącz się z MongoDB
@@ -13,6 +15,9 @@ mongoose.connect(process.env.MONGO_URI, { useNewUrlParser: true, useUnifiedTopol
 // Middleware
 app.use(cors());
 app.use(express.json());
+
+// Podłączenie tras autoryzacji
+app.use('/api/', authRoutes);
 
 // Uruchom serwer
 const port = process.env.PORT || 5000;
