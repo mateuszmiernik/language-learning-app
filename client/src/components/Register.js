@@ -4,6 +4,8 @@ const Register = () => {
 
     const [username, setUserName] = useState('');
     const [password, setPassword] = useState('');
+    const [success, setSuccess] = useState('');
+    const [error, setError]= useState('');
 
     const handleUserNameChange = (e) => {
         setUserName(e.target.value);
@@ -15,6 +17,7 @@ const Register = () => {
 
     const handleSubmit = async (e) => {
         e.preventDefault();
+        setError('');
 
         try {
             const response = await fetch('http://localhost:5000/api/register', {
@@ -25,13 +28,22 @@ const Register = () => {
 
             const data = await response.json();
 
-            console.log(data);
+
+            if (!response.ok) {
+                setError(data.message || 'Registration failed.')
+                return;
+            }
+
+            setSuccess('Registration successful!');
+            setUserName('');
+            setPassword('');
+            console.log('Registration successful:', data);
             
 
         } catch(error) {
             console.error('Error:', error);
+            setError('An unexpected error occured. Please try again.')
         }
-
     }
 
     return (
@@ -44,16 +56,18 @@ const Register = () => {
                     onChange={handleUserNameChange}
                     className='w-full p-2 border rounded-md'
                     placeholder='Enter username'
+                    required
                 />
             </div>
             <div className='mb-4'>
                 <label className='block mb-2 text-gray-700'>Password</label>
                 <input 
-                    type='text'
+                    type='password'
                     value={password}
                     onChange={handlePasswordChange}
                     className='w-full p-2 border rounded-md'
                     placeholder='Enter password'
+                    required
                 />
             </div>
             <button 
@@ -62,6 +76,9 @@ const Register = () => {
             >
                 Register
             </button>
+
+            {error && <p className='text-red-500 text-sm mt-2'>{error}</p>}
+            {success && <p className='text-green-500 text-sm mt-2'>{success}</p>}
         </form>
     )
 }

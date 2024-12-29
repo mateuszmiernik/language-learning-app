@@ -15,7 +15,7 @@ const Login = () => {
 
     const handleSubmit = async (e) => {
         e.preventDefault();
-        console.log(`Logging with: ${username} and pw: ${password}`);   // PRINT
+        // console.log(`Logging with: ${username} and pw: ${password}`);   // PRINT
 
         try {
             const response = await fetch('http://localhost:5000/api/login', {
@@ -39,7 +39,7 @@ const Login = () => {
     }
 
     return (
-        <form onChange={handleSubmit}>
+        <form onSubmit={handleSubmit}>
             <div className="mb-4">
                 <label className='block mb-2 text-gray-700'>Username</label>
                 <input type='text' value={username} onChange={handleUsernameChange} className='w-full p-2 border rounded-md' placeholder='Enter username' required/>
