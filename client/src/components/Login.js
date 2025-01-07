@@ -1,9 +1,13 @@
 import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 
 const Login = () => {
 
     const [username, setUsername] = useState('');
     const [password, setPassword] = useState('');
+    const [error, setError] = useState('');
+
+    const navigate = useNavigate();
 
     const handleUsernameChange = (e) => {
         setUsername(e.target.value);
@@ -15,6 +19,7 @@ const Login = () => {
 
     const handleSubmit = async (e) => {
         e.preventDefault();
+        setError('');
         // console.log(`Logging with: ${username} and pw: ${password}`);   // PRINT
 
         try {
@@ -28,13 +33,18 @@ const Login = () => {
 
             const data = await response.json();
 
-            if (response.ok) {
-                console.log('Logged in:', data);
-            } else {
-                console.error('Error', data.message);
-            }
+            if (!response.ok) {
+                setError(data.message || 'Invalid username or password');
+                return;
+            } 
+
+            localStorage.setItem('token', data.token);
+            console.log('Logged in', data);
+            navigate('/flashcards');
+
         } catch (err){
             console.error('Error', err);
+            setError('Unexpected error occured. Please try again.');
         }
     }
 
@@ -49,6 +59,7 @@ const Login = () => {
                 <input type='password' value={password} onChange={handlePasswordChange} className='w-full p-2 border rounded-md' placeholder='Enter password' required/>
             </div>
             <button type='submit' className='w-full bg-blue-500 text-white py-2 rounded-md hover:bg-blue-600'>Log in</button>
+            {error && <p className='text-red-500 text-sm mt-2'>{error}</p>}
         </form>
     )
 }
