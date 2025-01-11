@@ -1,33 +1,71 @@
 import React, { useState } from 'react';
 import { TrashIcon } from "@heroicons/react/24/outline";
-
+import { v4 as uuidv4 } from 'uuid';
 
 const AddFlashcard = () => {
     const [title, setTitle] = useState('');
     const [description, setDescription] = useState('');
-    const [flashcards, setFlashcards] = useState([{ term: '', definition: ''}]);
+    const [flashcards, setFlashcards] = useState([{ id: uuidv4(), term: '', definition: ''}]);
     const [message, setMessage] = useState('');
 
     const handleAddFlashcard = () => {
-        setFlashcards([...flashcards, { term: '', definition: ''}]);
+        setFlashcards([...flashcards, { id: uuidv4(), term: '', definition: ''}]);
     }
 
-    const handleRemoveFlashcard = (indexToDelete) => {
-        const updatedFlashcards = flashcards.filter((_, index) => index !==indexToDelete);
+    const handleRemoveFlashcard = (id) => {
+        const updatedFlashcards = flashcards.filter((flashcard) => flashcard.id !== id);
         setFlashcards(updatedFlashcards);
     }
 
-    const handleChangeFlashcard = (index, field, value) => {
-        const updatedFlashcards = flashcards.map((flashcard, i) => 
-            i === index ? { ...flashcard, [field]: value} : flashcard
+    const handleChangeFlashcard = (id, field, value) => {
+        const updatedFlashcards = flashcards.map((flashcard) => 
+            flashcard.id === id ? { ...flashcard, [field]: value} : flashcard
         );
         setFlashcards(updatedFlashcards);
     }
 
+    const handleSubmit = async (e) => {
+        e.preventDefault();
+
+        // Usuwamy UUID z fiszek przed wysłaniem do backendu
+        const flashCardsWithoutUUID = flashcards.map(({ id, ...rest }) => rest);
+
+        try {
+            const response = await fetch('http://localhost:5000/api/add-flashcard', {
+                method: 'POST',
+                headers: {'Content-Type': 'application/json'},
+                body: JSON.stringify({title, description, flashcards: flashCardsWithoutUUID})
+            });
+
+            const data = await response.json();
+
+            if (response.ok) {
+                setMessage('Flashcard set created successfully!');
+                setTitle('');
+                setDescription('');
+                setFlashcards([{ term: '', definition: ''}])
+            } else {
+                setMessage(data.message || 'Error creating flashcard set.');
+            }
+        }
+        catch (err) {
+            setMessage('An unexpected error occured.');
+        }
+    }
+
 
     return (
-        <form className='max-w-2xl bg-white p-6 rounded-lg shadow-lg'>
+        <form onSubmit={handleSubmit} className='max-w-2xl bg-white p-6 rounded-lg shadow-lg'>
+            <div className='flex justify-between'>
             <h1 className='text-2xl font-bold mb-4'>Create a New Flashcard Set</h1>
+            <button
+                    type='submit'
+                    className='bg-blue-500 text-white px-4 py-2 rounded mb-4'
+                >
+                    Create
+                </button>
+            </div>
+            
             
             {/* Title Input */}
                 <div className='mb-4'>
@@ -58,15 +96,15 @@ const AddFlashcard = () => {
                 </div>
 
                 {/* Flashcards */}
-                {flashcards.map((flashcards, index) => (
-                    <div key={index} className='mb-4 border-b pb-4'>
+                {flashcards.map((flashcard) => (
+                    <div key={flashcard.id} className='mb-4 border-b pb-4'>
                         <div className='flex justify-between items-center mb-2'>
                             <h2 className='text-lg font-semibold'>Flashcard</h2>
-                            <button 
-                                onClick={() => handleRemoveFlashcard(index)}
-                                className='rounded-sm'
-                            >
-                                <TrashIcon className='h-4 w-4 text-gray-500' />
+                            <button
+                                onClick={() => handleRemoveFlashcard(flashcard.id)}
+                                className="group p-2 rounded-full bg-transparent hover:bg-red-100 transition-all duration-300 ease-in-out"
+                                >
+                                <TrashIcon className="h-5 w-5 text-gray-500 transition-transform duration-300 ease-in-out group-hover:text-red-500 group-hover:scale-110" />
                             </button>
                         </div>
 
@@ -75,7 +113,8 @@ const AddFlashcard = () => {
                             <div className='w-1/2'>
                                 <input
                                     type='text'
-                                    onChange={(e) => handleChangeFlashcard(index, 'term', e.target.value)}
+                                    value={flashcard.term}
+                                    onChange={(e) => handleChangeFlashcard(flashcard.id, 'term', e.target.value)}
                                     className='border-b border-black p-2 w-full'
                                     required
                                 />
@@ -86,6 +125,8 @@ const AddFlashcard = () => {
                             <div className='w-1/2'>
                                 <input 
                                     type='text'
+                                    value={flashcard.definition}
+                                    onChange={(e) => handleChangeFlashcard(flashcard.id, 'definition', e.target.value)}
                                     className='border-b border-black p-2 w-full'
                                     required
                                 />
@@ -102,11 +143,17 @@ const AddFlashcard = () => {
                 >
                     Add Flashcard
                 </button>
-                
-   
-        </form>
 
-        
+                {message && (
+                    <div
+                        className={`p-2 mb-4 ${
+                            message.includes('successfully') ? 'text-green-500' : 'text-red-500'
+                        }`}
+                    >
+                        {message}
+                    </div>
+                )}
+        </form>
     )
 }
 
