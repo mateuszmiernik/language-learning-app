@@ -24,4 +24,44 @@ const addFlashcardSet = async (req, res) => {
     }
 }
 
-module.exports = { addFlashcardSet };
+const getFlashcardSets = async (req, res) => {
+    const userId = req.user.id;
+
+    try {
+        // Pobieramy wszystkie zestawy należące do użytkownika
+        const flashcardSets = await FlashcardSet.find({ userId });
+
+        if (!flashcardSets || flashcardSets.length === 0) {
+            return res.status(404).json({ message: 'No flashcard sets found '});
+        }
+
+        // Zwracamy zestawy fiszek w odpowiedzi
+        res.status(200).json(flashcardSets);
+    } catch (error) {
+        console.error('Error getting flashcard sets:', error);  // Logujemy błąd
+        res.status(500).json({ message: 'Error fetching flashcard sets', error: error.message });  // Odpowiedź z błędem
+    }
+}
+
+const deleteFlascardSet = async (req, res) => {
+    const { id } = req.params; // ID zestawu z parametrów URL
+    const userId = req.user.id; // ID zalogowanego użytkownika
+
+    try {
+        const flashcardSet = await FlashcardSet.findOne({ _id: id, userId});
+        if (!flashcardSet) {
+            return res.status(404).jsonn({ message: 'Flashcard set not found or does not belong to the user'});
+        }
+
+        // Usuwamy zestaw z bazy danych
+        await FlashcardSet.findByIdAndDelete(id);
+
+    } catch (error) {
+        console.error('Error deleting flashcard set:', error);  // Logujemy błąd
+        res.status(500).json({ message: 'Error deleting flashcard set', error: error.message });  // Odpowiedź z błędem
+    }
+
+
+}
+
+module.exports = { addFlashcardSet, getFlashcardSets, deleteFlascardSet };
