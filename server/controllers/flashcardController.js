@@ -5,6 +5,9 @@ const addFlashcardSet = async (req, res) => {
 
     const userId = req.user.id;
 
+    console.log('Request body:', req.body);  // Sprawdź, czy dane są poprawne
+    console.log('User ID:', userId);  // Sprawdź, czy użytkownik jest zalogowany
+
     try {
         // Tworzymy nowy zestaw fiszek na podstawie otrzymanych danych
         const newFlashcardSet = new FlashcardSet({

@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { TrashIcon } from "@heroicons/react/24/outline";
 import { v4 as uuidv4 } from 'uuid';
+import { addFlashcardSet } from '../api/FlashcardApi';
 
 const AddFlashcard = () => {
     const [title, setTitle] = useState('');
@@ -31,25 +32,14 @@ const AddFlashcard = () => {
         const flashCardsWithoutUUID = flashcards.map(({ id, ...rest }) => rest);
 
         try {
-            const response = await fetch(`${process.env.REACT_APP_API_URL}/add-flashcard`, {
-                method: 'POST',
-                headers: {'Content-Type': 'application/json'},
-                body: JSON.stringify({title, description, flashcards: flashCardsWithoutUUID})
-            });
-
-            const data = await response.json();
-
-            if (response.ok) {
-                setMessage('Flashcard set created successfully!');
-                setTitle('');
-                setDescription('');
-                setFlashcards([{ term: '', definition: ''}])
-            } else {
-                setMessage(data.message || 'Error creating flashcard set.');
-            }
+            await addFlashcardSet(title, description, flashcards);
+            setMessage('Flashcard set created successfully!');
+            setTitle('');
+            setDescription('');
+            setFlashcards([{ id: uuidv4(), term: '', definition: ''}]);
         }
-        catch (err) {
-            setMessage('An unexpected error occured.');
+        catch (error) {
+            setMessage(error.message || 'An unexpected error occurred.');
         }
     }
 

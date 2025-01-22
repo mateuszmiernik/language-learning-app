@@ -3,7 +3,7 @@ const mongoose = require('mongoose');
 const cardSchema = new mongoose.Schema({
     term: { type: String, required: true },
     definition: { type: String, required: true }
-})
+});
 
 const flashcardSchema = new mongoose.Schema({
     title: { type: String, required: true },
