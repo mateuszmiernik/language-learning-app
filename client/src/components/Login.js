@@ -52,11 +52,11 @@ const Login = () => {
         <form onSubmit={handleSubmit}>
             <div className="mb-4">
                 <label className='block mb-2 text-gray-700'>Username</label>
-                <input type='text' value={username} onChange={handleUsernameChange} className='w-full p-2 border rounded-md' placeholder='Enter username' required/>
+                <input type='text' value={username} onChange={handleUsernameChange} className='w-full p-2 border rounded-md' placeholder='Enter username' autoComplete='username' required/>
             </div>
             <div className='mb-4'>
                 <label className='block mb-2 text-gray-700'>Password</label>
-                <input type='password' value={password} onChange={handlePasswordChange} className='w-full p-2 border rounded-md' placeholder='Enter password' required/>
+                <input type='password' value={password} onChange={handlePasswordChange} className='w-full p-2 border rounded-md' placeholder='Enter password' autoComplete='current-password' required/>
             </div>
             <button type='submit' className='w-full bg-blue-500 text-white py-2 rounded-md hover:bg-blue-600'>Log in</button>
             {error && <p className='text-red-500 text-sm mt-2'>{error}</p>}

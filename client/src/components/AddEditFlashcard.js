@@ -1,12 +1,13 @@
 import React, { useState } from 'react';
+import { useParams, useNavigate } from 'react-router-dom';
 import { TrashIcon } from "@heroicons/react/24/outline";
 import { v4 as uuidv4 } from 'uuid';
 import { addFlashcardSet } from '../api/FlashcardApi';
 
-const AddFlashcard = () => {
+const AddEditFlashcard = () => {
     const [title, setTitle] = useState('');
     const [description, setDescription] = useState('');
-    const [flashcards, setFlashcards] = useState([{ id: uuidv4(), term: '', definition: ''}]);
+    const [flashcards, setFlashcards] = useState([{ id: uuidv4(), term: '', definition: '' }]);
     const [message, setMessage] = useState('');
 
     const handleAddFlashcard = () => {
@@ -43,19 +44,18 @@ const AddFlashcard = () => {
         }
     }
 
-
     return (
-        <form onSubmit={handleSubmit} className='max-w-2xl bg-white p-6 rounded-lg shadow-lg'>
-            <div className='flex justify-between'>
-            <h1 className='text-2xl font-bold mb-4'>Create a New Flashcard Set</h1>
-            <button
-                    type='submit'
-                    className='bg-blue-500 text-white px-4 py-2 rounded mb-4'
-                >
-                    Create
-                </button>
-            </div>
-            
+        <div className='min-h-screen flex items-center justify-center'>
+            <form onSubmit={handleSubmit} className='w-full max-w-2xl bg-white p-6 rounded-lg shadow-lg'>
+                <div className='flex justify-between'>
+                    <h1 className='text-2xl font-bold mb-4'>Create a New Flashcard Set</h1>
+                    <button
+                            type='submit'
+                            className='bg-blue-500 text-white px-4 py-2 rounded mb-4'
+                        >
+                            Create
+                        </button>
+                </div>
             
             {/* Title Input */}
                 <div className='mb-4'>
@@ -143,8 +143,9 @@ const AddFlashcard = () => {
                         {message}
                     </div>
                 )}
-        </form>
+            </form>
+        </div>
     )
 }
 
-export default AddFlashcard;
+export default AddEditFlashcard;

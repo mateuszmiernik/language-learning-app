@@ -1,5 +1,6 @@
 import React, { useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
+import FlashcardList from './FlashcardList';
 
 const Flashcards = () => {
     const navigate = useNavigate();
@@ -29,6 +30,8 @@ const Flashcards = () => {
             </Link>
 
             <button onClick={handleLogout} className='text-red-500 underline'>Logout</button>
+
+            <FlashcardList />
         </div>
     )
 }

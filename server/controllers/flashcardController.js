@@ -25,7 +25,7 @@ const addFlashcardSet = async (req, res) => {
         console.error('Error adding flashcard set:', error);  // Logujemy błąd na serwerze
         res.status(500).json({ message: 'Error adding flashcard set', error: error.message });  // Wysyłamy odpowiedź z błędem
     }
-}
+};
 
 const getFlashcardSets = async (req, res) => {
     const userId = req.user.id;
@@ -44,7 +44,47 @@ const getFlashcardSets = async (req, res) => {
         console.error('Error getting flashcard sets:', error);  // Logujemy błąd
         res.status(500).json({ message: 'Error fetching flashcard sets', error: error.message });  // Odpowiedź z błędem
     }
-}
+};
+
+const getFlashcardSetById = async (req, res) => {
+    const { id } = req.params;
+    const userId = req.user.id;
+
+    try {
+        const flashcardSet = await FlashcardSet.findOne({ _id: id, userId });
+
+        if (!flashcardSet) {
+            return res.status(404).json({ message: 'Flashcard set not found or does not belong to the user' });
+        }
+        res.status(200).json(flashcardSet);
+    } catch (error) {
+        console.error('Error getting flashcard set:', error);
+        res.status(500).json({ message: 'Error fetching flashcard set', error: error.message });
+    }
+};
+
+const updateFlashcardSet = async (req, res) => {
+    const { id } = req.params;
+    const { title, description, cards } = req.body;
+    const { userId } = req.user.id;
+
+    try {
+        const flashcardSet = await FlashcardSet.findOneAndUpdate(
+            { _id: id, userId },
+            { title, description, cards },
+            { new: true, runValidators: true }
+        );
+
+        if (!flashcardSet) {
+            return res.status(404).json({ message: 'Flashcard set not found or does not belong to the user' });
+        }
+        res.status(200).json(flashcardSet);
+    } catch (error) {
+        console.error('Error updating flashcard set:', error);
+        res.status(500).json({ message: 'Error updating flashcard set', error: error.message });
+    }
+
+};
 
 const deleteFlascardSet = async (req, res) => {
     const { id } = req.params; // ID zestawu z parametrów URL
@@ -65,6 +105,6 @@ const deleteFlascardSet = async (req, res) => {
     }
 
 
-}
+};
 
-module.exports = { addFlashcardSet, getFlashcardSets, deleteFlascardSet };
+module.exports = { addFlashcardSet, getFlashcardSets, getFlashcardSetById, deleteFlascardSet };
