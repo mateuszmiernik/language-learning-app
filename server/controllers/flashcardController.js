@@ -1,19 +1,19 @@
 const FlashcardSet = require('../models/FlashcardSet');
 
 const addFlashcardSet = async (req, res) => {
-    const {title, description, cards} = req.body;
+    const {title, description, flashcards} = req.body;
 
     const userId = req.user.id;
 
-    console.log('Request body:', req.body);  // Sprawdź, czy dane są poprawne
-    console.log('User ID:', userId);  // Sprawdź, czy użytkownik jest zalogowany
+    console.log('flashcardController.js - Request body:', req.body);  // Sprawdź, czy dane są poprawne
+    console.log('flashcardController.js - User ID:', userId);  // Sprawdź, czy użytkownik jest zalogowany
 
     try {
         // Tworzymy nowy zestaw fiszek na podstawie otrzymanych danych
         const newFlashcardSet = new FlashcardSet({
             title,
             description,
-            cards,
+            flashcards,
             userId
         });
 
@@ -68,10 +68,10 @@ const updateFlashcardSet = async (req, res) => {
     const { title, description, flashcards } = req.body;
     const userId  = req.user.id;
 
-    console.log("Updating flashcard set...");
-    console.log("Received ID:", id);
-    console.log("Received userId:", userId);
-    console.log(req.body);
+    // console.log("Updating flashcard set...");
+    // console.log("Received ID:", id);
+    // console.log("Received userId:", userId);
+    // console.log(req.body);
 
     try {
         const flashcardSet = await FlashcardSet.findOneAndUpdate(
@@ -92,8 +92,8 @@ const updateFlashcardSet = async (req, res) => {
 };
 
 const deleteFlascardSet = async (req, res) => {
-    const { id } = req.params; // ID zestawu z parametrów URL
-    const userId = req.user.id; // ID zalogowanego użytkownika
+    const { id } = req.params;
+    const userId = req.user.id; 
 
     try {
         const flashcardSet = await FlashcardSet.findOne({ _id: id, userId});

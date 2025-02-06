@@ -30,7 +30,7 @@ const FlashcardList = () => {
                     <div className='bg-white border p-4 hover:shadow-lg transition-shadow duration-200 rounded-lg shadow-lg'>
                         <h2 className='font-bold text-xl'>{set.title}</h2>
                         <p>{set.description}</p>
-                        <p>Number of flashcards: {set.cards.length}</p>
+                        <p>Number of flashcards: {set.flashcards.length}</p>
                     </div>
                 </Link>
             ))}

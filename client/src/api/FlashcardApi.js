@@ -13,7 +13,7 @@ export const addFlashcardSet = async (title, description, flashcards) => {
                 'Content-Type': 'application/json',
                 'Authorization': `Bearer ${localStorage.getItem('token')}`
             },
-            body: JSON.stringify({title, description, cards: flashcardsWithoutUUID})
+            body: JSON.stringify({title, description, flashcards: flashcardsWithoutUUID})
         })
 
         const data = await response.json();
@@ -45,7 +45,7 @@ export const getFlashcardSet = async () => {
             throw new Error(data.message || 'Failed to fetch flashcard set(s)');
         }
 
-        console.log('GET data:', data);
+        console.log('FlashcardApi.js - getFlashcardSet:', data);
 
         // Mapowanie `_id` na `id`
         const mappedData = data.map(set => ({
@@ -70,6 +70,8 @@ export const getFlashcardSetById = async (id) => {
         });
 
         const data = await response.json();
+
+        console.log('FlashcardApi.js - getFlashcardSetById:', data);
 
         if (!response.ok) {
             throw new Error(data.message || 'Failed to fetch flashcard set');

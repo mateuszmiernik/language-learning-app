@@ -21,7 +21,7 @@ const AddEditFlashcard = () => {
                     const existingSet = await getFlashcardSetById(id);
                     setTitle(existingSet.title);
                     setDescription(existingSet.description);
-                    setFlashcards(existingSet.cards);
+                    setFlashcards(existingSet.flashcards);
                     console.log('set by id: ', existingSet);
                 } catch (error) {
                     setMessage('Failed to load flashcard set.')
@@ -36,7 +36,9 @@ const AddEditFlashcard = () => {
     }
 
     const handleRemoveFlashcard = (id) => {
+        console.log('REMOVING flashcard with id: ', id);
         const updatedFlashcards = flashcards.filter((flashcard) => flashcard.id !== id);
+        console.log('UPDATED flashcards: ', updatedFlashcards);
         setFlashcards(updatedFlashcards);
     }
 
@@ -70,6 +72,9 @@ const AddEditFlashcard = () => {
             setMessage(error.message || 'An unexpected error occurred.');
         }
     }
+
+    console.log("Flashcards:", flashcards);
+    console.log("Flashcards:", flashcards.id);
 
     return (
         <div className='min-h-screen flex items-center justify-center'>
@@ -116,11 +121,11 @@ const AddEditFlashcard = () => {
 
                 {/* Flashcards */}
                 {flashcards.map((flashcard) => (
-                    <div key={flashcard.id} className='mb-4 border-b pb-4'>
+                    <div key={flashcard._id} className='mb-4 border-b pb-4'>
                         <div className='flex justify-between items-center mb-2'>
                             <h2 className='text-lg font-semibold'>Flashcard</h2>
                             <button
-                                onClick={() => handleRemoveFlashcard(flashcard.id)}
+                                onClick={() => handleRemoveFlashcard(flashcard._id)}
                                 className="group p-2 rounded-full bg-transparent hover:bg-red-100 transition-all duration-300 ease-in-out"
                                 >
                                 <TrashIcon className="h-5 w-5 text-gray-500 transition-transform duration-300 ease-in-out group-hover:text-red-500 group-hover:scale-110" />
