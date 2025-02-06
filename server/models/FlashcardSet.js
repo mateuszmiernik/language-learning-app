@@ -8,7 +8,7 @@ const cardSchema = new mongoose.Schema({
 const flashcardSchema = new mongoose.Schema({
     title: { type: String, required: true },
     description: { type: String, maxLength: 255 },
-    cards: [cardSchema],
+    flashcards: [cardSchema],
     userId: { type: mongoose.Schema.Types.ObjectId, ref: 'User', required: true},
 },
 {

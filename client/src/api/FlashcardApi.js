@@ -34,10 +34,10 @@ export const getFlashcardSet = async () => {
         const response = await fetch(`${API_URL}/flashcards`, {
             method: 'GET',
             headers: {
-                // 'Content-Type': 'application/json',
+                'Content-Type': 'application/json',
                 'Authorization': `Bearer ${localStorage.getItem('token')}`
-            },
-        })
+            }
+        });
 
         const data = await response.json();
 
@@ -46,14 +46,65 @@ export const getFlashcardSet = async () => {
         }
 
         console.log('GET data:', data);
-        
-        return await data;
+
+        // Mapowanie `_id` na `id`
+        const mappedData = data.map(set => ({
+            ...set,
+            id: set._id, // Dodanie aliasu `id` dla `_id`
+        }));
+
+        return mappedData;
     } catch (error) {
         console.error('Error fetching flashcard sets:', error.message);
         throw error;
     }
 };
 
-export const updateFlashcardSet = async () => {
-    
+export const getFlashcardSetById = async (id) => {
+    try {
+        const response = await fetch(`${API_URL}/flashcards/${id}`, {
+            method: 'GET',
+            headers: {
+                Authorization: `Bearer ${localStorage.getItem('token')}`
+            }
+        });
+
+        const data = await response.json();
+
+        if (!response.ok) {
+            throw new Error(data.message || 'Failed to fetch flashcard set');
+        }
+
+        return data;
+    } catch (error) {
+        console.error('Error fetching flashcard set:', error.message);
+        throw error;
+    }
+};
+
+export const updateFlashcardSet = async (id, flashcardSet) => {
+    console.log("Updating flashcard set with ID:", id); // LOG
+    console.log("Data being sent:", flashcardSet); // LOG
+
+    try {
+        const response = await fetch(`${API_URL}/flashcards/${id}`, {
+            method: 'PUT',
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${localStorage.getItem('token')}`
+            },
+            body: JSON.stringify(flashcardSet)
+        });
+
+        const data = await response.json();
+
+        if (!response.ok) {
+            throw new Error(data.message || 'Failed to update flashcard set');
+        }
+
+        return data;
+    } catch (error) {
+        console.error('Error updating flashcard set:', error.message);
+        throw error;
+    }
 };

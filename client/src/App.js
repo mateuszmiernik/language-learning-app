@@ -2,7 +2,7 @@ import './App.css';
 import { Routes, Route } from 'react-router-dom';
 import Auth from './components/Auth';
 import Flashcards from './components/Flashcards';
-import AddFlashcard from './components/AddEditFlashcard';
+import AddEditFlashcard from './components/AddEditFlashcard';
 import FlashcardViewer from './components/FlashcardViewer';
 
 function App() {
@@ -16,10 +16,10 @@ function App() {
         <Route path='/flashcards' element={<Flashcards />} />
 
         {/* Formularz dodawania nowych fiszek */}
-        <Route path='/add-flashcard' element={<AddFlashcard />} />
+        <Route path='/add-flashcard' element={<AddEditFlashcard />} />
 
         {/* Formularz edycji fiszek */}
-        <Route path='/flashcards/:id/edit' element={<AddFlashcard />} />
+        <Route path='/flashcards/:id/edit' element={<AddEditFlashcard />} />
 
         {/* Przeglądanie zestawu fiszek */}
         <Route path='flashcards/:id' element={<FlashcardViewer />} />

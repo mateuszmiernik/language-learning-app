@@ -2,6 +2,7 @@ import { useParams, Link } from 'react-router-dom';
 
 const FlashcardViewer = () => {
     const { id } = useParams();
+    console.log("Flashcard ID:", id); // Debugowanie
 
     return (
         <div>

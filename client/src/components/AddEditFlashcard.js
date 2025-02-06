@@ -1,14 +1,35 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { TrashIcon } from "@heroicons/react/24/outline";
 import { v4 as uuidv4 } from 'uuid';
-import { addFlashcardSet } from '../api/FlashcardApi';
+import { addFlashcardSet, updateFlashcardSet } from '../api/FlashcardApi';
+import { getFlashcardSetById } from '../api/FlashcardApi';
 
 const AddEditFlashcard = () => {
+    const { id } = useParams();
+    const navigate = useNavigate();
+
     const [title, setTitle] = useState('');
     const [description, setDescription] = useState('');
     const [flashcards, setFlashcards] = useState([{ id: uuidv4(), term: '', definition: '' }]);
     const [message, setMessage] = useState('');
+
+    useEffect(() => {
+        if (id) {
+            const fetchFlashcardSet = async () => {
+                try {
+                    const existingSet = await getFlashcardSetById(id);
+                    setTitle(existingSet.title);
+                    setDescription(existingSet.description);
+                    setFlashcards(existingSet.cards);
+                    console.log('set by id: ', existingSet);
+                } catch (error) {
+                    setMessage('Failed to load flashcard set.')
+                }
+            };
+            fetchFlashcardSet();
+        }
+    }, [id]);
 
     const handleAddFlashcard = () => {
         setFlashcards([...flashcards, { id: uuidv4(), term: '', definition: ''}]);
@@ -33,11 +54,17 @@ const AddEditFlashcard = () => {
         const flashCardsWithoutUUID = flashcards.map(({ id, ...rest }) => rest);
 
         try {
-            await addFlashcardSet(title, description, flashcards);
-            setMessage('Flashcard set created successfully!');
-            setTitle('');
-            setDescription('');
-            setFlashcards([{ id: uuidv4(), term: '', definition: ''}]);
+            if (id) {
+                await updateFlashcardSet(id, {title, description, flashcards});
+                setMessage('Flashcard set updated successfully!');
+            } else {
+                await addFlashcardSet(title, description, flashcards);
+                setMessage('Flashcard set created successfully!');
+                setTitle('');
+                setDescription('');
+                setFlashcards([{ id: uuidv4(), term: '', definition: ''}]);
+            }
+            // navigate('flashcards/api')
         }
         catch (error) {
             setMessage(error.message || 'An unexpected error occurred.');
@@ -48,16 +75,18 @@ const AddEditFlashcard = () => {
         <div className='min-h-screen flex items-center justify-center'>
             <form onSubmit={handleSubmit} className='w-full max-w-2xl bg-white p-6 rounded-lg shadow-lg'>
                 <div className='flex justify-between'>
-                    <h1 className='text-2xl font-bold mb-4'>Create a New Flashcard Set</h1>
+                    <h1 className='text-2xl font-bold mb-4'>
+                        { id ? 'Edit Flashcard Set' : 'Create a New Flashcard Set'}
+                    </h1>
                     <button
                             type='submit'
                             className='bg-blue-500 text-white px-4 py-2 rounded mb-4'
                         >
-                            Create
+                            { id ? 'Update' : 'Create'}
                         </button>
                 </div>
             
-            {/* Title Input */}
+                {/* Title Input */}
                 <div className='mb-4'>
                     <label className='block text-sm font-medium mb-2'>Set Title</label>
                     <input 

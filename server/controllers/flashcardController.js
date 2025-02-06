@@ -65,13 +65,18 @@ const getFlashcardSetById = async (req, res) => {
 
 const updateFlashcardSet = async (req, res) => {
     const { id } = req.params;
-    const { title, description, cards } = req.body;
-    const { userId } = req.user.id;
+    const { title, description, flashcards } = req.body;
+    const userId  = req.user.id;
+
+    console.log("Updating flashcard set...");
+    console.log("Received ID:", id);
+    console.log("Received userId:", userId);
+    console.log(req.body);
 
     try {
         const flashcardSet = await FlashcardSet.findOneAndUpdate(
             { _id: id, userId },
-            { title, description, cards },
+            { title, description, flashcards },
             { new: true, runValidators: true }
         );
 
@@ -107,4 +112,4 @@ const deleteFlascardSet = async (req, res) => {
 
 };
 
-module.exports = { addFlashcardSet, getFlashcardSets, getFlashcardSetById, deleteFlascardSet };
+module.exports = { addFlashcardSet, getFlashcardSets, getFlashcardSetById, updateFlashcardSet, deleteFlascardSet };
