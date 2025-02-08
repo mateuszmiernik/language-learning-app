@@ -22,7 +22,7 @@ const AddEditFlashcard = () => {
                     setTitle(existingSet.title);
                     setDescription(existingSet.description);
                     setFlashcards(existingSet.flashcards);
-                    console.log('set by id: ', existingSet);
+                    // console.log('set by id: ', existingSet);
                 } catch (error) {
                     setMessage('Failed to load flashcard set.')
                 }
@@ -35,9 +35,9 @@ const AddEditFlashcard = () => {
         setFlashcards([...flashcards, { id: uuidv4(), term: '', definition: ''}]);
     }
 
-    const handleRemoveFlashcard = (id) => {
-        console.log('REMOVING flashcard with id: ', id);
-        const updatedFlashcards = flashcards.filter((flashcard) => flashcard.id !== id);
+    const handleRemoveFlashcard = (_id) => {
+        console.log('REMOVING flashcard with id: ', _id);
+        const updatedFlashcards = flashcards.filter((flashcard) => flashcard._id !== _id);
         console.log('UPDATED flashcards: ', updatedFlashcards);
         setFlashcards(updatedFlashcards);
     }
@@ -73,8 +73,8 @@ const AddEditFlashcard = () => {
         }
     }
 
-    console.log("Flashcards:", flashcards);
-    console.log("Flashcards:", flashcards.id);
+    // console.log("AddEditFlashcard.js - Flashcards:", flashcards);
+    // console.log("AddEditFlashcard.js - Flashcards - IDs:", flashcards.map(f => f._id));
 
     return (
         <div className='min-h-screen flex items-center justify-center'>
@@ -125,6 +125,7 @@ const AddEditFlashcard = () => {
                         <div className='flex justify-between items-center mb-2'>
                             <h2 className='text-lg font-semibold'>Flashcard</h2>
                             <button
+                                type='button'
                                 onClick={() => handleRemoveFlashcard(flashcard._id)}
                                 className="group p-2 rounded-full bg-transparent hover:bg-red-100 transition-all duration-300 ease-in-out"
                                 >
