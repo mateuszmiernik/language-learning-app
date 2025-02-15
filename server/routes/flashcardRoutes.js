@@ -1,6 +1,6 @@
 const express = require('express');
 const router = express.Router();
-const { addFlashcardSet, getFlashcardSets, getFlashcardSetById, updateFlashcardSet, deleteFlascardSet } = require('../controllers/flashcardController'); 
+const { addFlashcardSet, getFlashcardSets, getFlashcardSetById, updateFlashcardSet, deleteFlashcardSet } = require('../controllers/flashcardController'); 
 const { protect } = require('../middleware/authMiddleware');
 
 // Trasa POST: Dodawanie nowego zestawu fiszek
@@ -16,6 +16,6 @@ router.get('/:id', protect, getFlashcardSetById);
 router.put('/:id', protect, updateFlashcardSet);
 
 // Trasa DELETE: Usuwanie zestawu fiszek po ID
-router.delete('/:id', protect, deleteFlascardSet);
+router.delete('/:id', protect, deleteFlashcardSet);
 
 module.exports = router;

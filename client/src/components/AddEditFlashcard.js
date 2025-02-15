@@ -1,9 +1,10 @@
 import React, { useEffect, useState } from 'react';
-import { useParams, useNavigate } from 'react-router-dom';
+import { useParams, useNavigate, Link } from 'react-router-dom';
 import { TrashIcon } from "@heroicons/react/24/outline";
 import { v4 as uuidv4 } from 'uuid';
 import { addFlashcardSet, updateFlashcardSet } from '../api/FlashcardApi';
 import { getFlashcardSetById } from '../api/FlashcardApi';
+import { ArrowLeftIcon } from "@heroicons/react/24/outline";
 
 const AddEditFlashcard = () => {
     const { id } = useParams();
@@ -28,16 +29,20 @@ const AddEditFlashcard = () => {
                 }
             };
             fetchFlashcardSet();
+            // console.log('AddEditFlashcard.js - flashcards: ', flashcards)
         }
     }, [id]);
 
     const handleAddFlashcard = () => {
         setFlashcards([...flashcards, { id: uuidv4(), term: '', definition: ''}]);
+        console.log('AddEditFlashcard.js - flashcards: ', flashcards);
     }
 
-    const handleRemoveFlashcard = (_id) => {
-        console.log('REMOVING flashcard with id: ', _id);
-        const updatedFlashcards = flashcards.filter((flashcard) => flashcard._id !== _id);
+    const handleRemoveFlashcard = (idToRemove) => {
+        console.log('REMOVING flashcard with id: ', idToRemove);
+        const updatedFlashcards = flashcards.filter(
+            (flashcard) => flashcard.id !== idToRemove && flashcard._id !== idToRemove
+        );
         console.log('UPDATED flashcards: ', updatedFlashcards);
         setFlashcards(updatedFlashcards);
     }
@@ -51,6 +56,11 @@ const AddEditFlashcard = () => {
 
     const handleSubmit = async (e) => {
         e.preventDefault();
+
+        if (flashcards.length === 0) {
+            setMessage('You must add at least one flashcard.');
+            return;
+        } 
 
         // Usuwamy UUID z fiszek przed wysłaniem do backendu
         const flashCardsWithoutUUID = flashcards.map(({ id, ...rest }) => rest);
@@ -78,6 +88,10 @@ const AddEditFlashcard = () => {
 
     return (
         <div className='min-h-screen flex items-center justify-center'>
+            <Link to={id ? `/flashcards/${id}` : '/flashcards'} className='absolute top-4 left-4 z-10 p-2 rounded-full hover:bg-gray-200 transition'>
+                <ArrowLeftIcon className="h-6 w-6 text-gray-500" />
+            </Link>
+
             <form onSubmit={handleSubmit} className='w-full max-w-2xl bg-white p-6 rounded-lg shadow-lg'>
                 <div className='flex justify-between'>
                     <h1 className='text-2xl font-bold mb-4'>
@@ -126,7 +140,7 @@ const AddEditFlashcard = () => {
                             <h2 className='text-lg font-semibold'>Flashcard</h2>
                             <button
                                 type='button'
-                                onClick={() => handleRemoveFlashcard(flashcard._id)}
+                                onClick={() => handleRemoveFlashcard(flashcard._id || flashcard.id)}
                                 className="group p-2 rounded-full bg-transparent hover:bg-red-100 transition-all duration-300 ease-in-out"
                                 >
                                 <TrashIcon className="h-5 w-5 text-gray-500 transition-transform duration-300 ease-in-out group-hover:text-red-500 group-hover:scale-110" />

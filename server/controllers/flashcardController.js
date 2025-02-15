@@ -91,19 +91,21 @@ const updateFlashcardSet = async (req, res) => {
 
 };
 
-const deleteFlascardSet = async (req, res) => {
+const deleteFlashcardSet = async (req, res) => {
     const { id } = req.params;
     const userId = req.user.id; 
 
     try {
         const flashcardSet = await FlashcardSet.findOne({ _id: id, userId});
         if (!flashcardSet) {
-            return res.status(404).jsonn({ message: 'Flashcard set not found or does not belong to the user'});
+            return res.status(404).json({ message: 'Flashcard set not found or does not belong to the user'});
         }
 
         // Usuwamy zestaw z bazy danych
         await FlashcardSet.findByIdAndDelete(id);
+        console.log('✅ Deleted set:', req.params.id); // Debugowanie
 
+        res.status(200).json({ message: 'Flashcard set deleted successfully'});
     } catch (error) {
         console.error('Error deleting flashcard set:', error);  // Logujemy błąd
         res.status(500).json({ message: 'Error deleting flashcard set', error: error.message });  // Odpowiedź z błędem
@@ -112,4 +114,4 @@ const deleteFlascardSet = async (req, res) => {
 
 };
 
-module.exports = { addFlashcardSet, getFlashcardSets, getFlashcardSetById, updateFlashcardSet, deleteFlascardSet };
+module.exports = { addFlashcardSet, getFlashcardSets, getFlashcardSetById, updateFlashcardSet, deleteFlashcardSet };
