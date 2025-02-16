@@ -23,6 +23,9 @@ function App() {
 
         {/* Przeglądanie zestawu fiszek */}
         <Route path='flashcards/:id' element={<FlashcardViewer />} />
+
+        {/* Formularz do przegladania */}
+        <Route path='flashcards/:id/view' element={<AddEditFlashcard key='view' isViewMode={true}/>} />
       </Routes>
     </div>
   );

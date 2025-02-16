@@ -75,8 +75,12 @@ const FlashcardViewer = () => {
                         <p className='text-gray-600'>{description}</p>
                     </div>
 
+                    <Link to={`/flashcards/${id}/view`} className='btn btn-primary'>
+                        View
+                    </Link>
+
                     <Link to={`/flashcards/${id}/edit`} className='btn btn-primary'>
-                        EDIT
+                        Edit
                     </Link>
                     <button type='button' onClick={openDeleteModal}>
                         Delete
