@@ -41,19 +41,74 @@ const loginUser = async (req, res) => {
             return res.status(401).json({ message: 'Invalid password '});
         }
 
-        // Generuj token JWT
-        const token = jwt.sign( 
+        // Generowanie access tokena
+        const accessToken = jwt.sign( 
             { id: user._id }, 
             process.env.JWT_SECRET, 
-            { expiresIn: '1h' } // Token ważny przez 1 godzinę
+            { expiresIn: '1h' }
         );
 
-        // Zwróć odpowiedź z tokenem
-        res.status(200).json({ message: 'Login successful', token });
+        // Generowanie refresh tokena
+        const refreshToken = jwt.sign(
+            { id: user._id },
+            process.env.REFRESH_SECRET,
+            { expiresIn: '7d' }
+        );
+
+        // Zapisz refresh token w bazie danych
+        user.refreshToken = refreshToken;
+        await user.save()
+
+        // Zwracamy accessToken i refreshToken
+        res.status(200).json({ message: 'Login successful', accessToken, refreshToken });
     } catch (error) {
         console.error('Login error:', error);
         res.status(500).json({ message: 'Internal server error' });
     }
-}
+};
 
-module.exports = { loginUser, registerUser };
+const refreshAccessToken = async (req, res) => {
+    const { refreshToken } = req.body;
+
+    if (!refreshToken) {
+        return res.status(401).json({message: 'No refresh token provided'});
+    }
+
+    try {
+        // Sprawdzamy, czy refresh token istnieje w bazie
+        const user = await User.findOne({ refreshToken });
+        if (!user) {
+            return res.status(403).json({ message: 'Invalid refresh token' });
+        }
+
+        // Zweryfikuj refresh token
+        const decoded = jwt.verify(refreshToken, process.env.REFRESH_SECRET);
+
+        // Stwórz nowy access token
+        const newAccessToken = jwt.sign(
+            {id: decoded.id }, 
+            process.env.JWT_SECRET,
+            {expiresIn: '1h'} 
+        );
+
+        res.json({ accessToken: newAccessToken });
+    } catch (error) {
+        console.log(("Refresh token error:", error));
+        res.statsu(403).json({ message: "Invalid or expired refresh token" });
+    }
+};
+
+const logoutUser = async (req, res) => {
+    const {refreshToken} = req.body;
+
+    try {
+        // Znajdź użytkownika i usuń jego refresh token
+        await User.updateOne({ refreshToken }, { rehreshToken: null });
+
+        res.json({message: 'Logout successful' });
+    } catch (error) {
+        res.status(500).json({ message: "Logout failed", error: error.message });
+    }
+};
+
+module.exports = { loginUser, registerUser, refreshAccessToken, logoutUser };

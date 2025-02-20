@@ -1,6 +1,7 @@
 import React, { useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import FlashcardList from './FlashcardList';
+import { logout } from '../services/authService';
 
 const Flashcards = () => {
     const navigate = useNavigate();
@@ -15,8 +16,8 @@ const Flashcards = () => {
         }
     }, [navigate]); // useEffect uruchomi się przy załadowaniu komponentu
 
-    const handleLogout = () => {
-        localStorage.removeItem('token');
+    const handleLogout = async () => {
+        await logout();
         navigate('/');
     }
 

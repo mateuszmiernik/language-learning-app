@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { saveTokens } from '../services/authService';
 
 const Login = () => {
 
@@ -38,7 +39,7 @@ const Login = () => {
                 return;
             } 
 
-            localStorage.setItem('token', data.token);
+            saveTokens(data.accessToken, data.refreshToken);
             console.log('Logged in', data);
             navigate('/flashcards');
 

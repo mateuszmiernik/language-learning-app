@@ -1,3 +1,5 @@
+import { fetchWithAuth } from '../services/fetchWithAuth';
+
 const API_URL = process.env.REACT_APP_API_URL;
 
 export const addFlashcardSet = async (title, description, flashcards) => {
@@ -7,14 +9,10 @@ export const addFlashcardSet = async (title, description, flashcards) => {
         const flashcardsWithoutUUID = flashcards.map(({id, ...rest}) => rest);
         console.log('Processed flashcards:', flashcardsWithoutUUID);
 
-        const response = await fetch(`${API_URL}/flashcards`, {
-            method:'POST',
-            headers: {
-                'Content-Type': 'application/json',
-                'Authorization': `Bearer ${localStorage.getItem('token')}`
-            },
+        const response = await fetchWithAuth('/flashcards', {
+            method: 'POST',
             body: JSON.stringify({title, description, flashcards: flashcardsWithoutUUID})
-        })
+        });
 
         const data = await response.json();
 
@@ -31,13 +29,7 @@ export const addFlashcardSet = async (title, description, flashcards) => {
 
 export const getFlashcardSet = async () => {
     try {
-        const response = await fetch(`${API_URL}/flashcards`, {
-            method: 'GET',
-            headers: {
-                'Content-Type': 'application/json',
-                'Authorization': `Bearer ${localStorage.getItem('token')}`
-            }
-        });
+        const response = await fetchWithAuth('/flashcards', { method: 'GET' });
 
         const data = await response.json();
 
@@ -62,12 +54,7 @@ export const getFlashcardSet = async () => {
 
 export const getFlashcardSetById = async (id) => {
     try {
-        const response = await fetch(`${API_URL}/flashcards/${id}`, {
-            method: 'GET',
-            headers: {
-                Authorization: `Bearer ${localStorage.getItem('token')}`
-            }
-        });
+        const response = await fetchWithAuth(`/flashcards/${id}`, { method: 'GET' });
 
         const data = await response.json();
 
@@ -85,18 +72,14 @@ export const getFlashcardSetById = async (id) => {
 };
 
 export const updateFlashcardSet = async (id, flashcardSet) => {
-    console.log("Updating flashcard set with ID:", id); // LOG
-    console.log("Data being sent:", flashcardSet); // LOG
+    console.log("Updating flashcard set with ID:", id);
+    console.log("Data being sent:", flashcardSet);
 
     try {
-        const response = await fetch(`${API_URL}/flashcards/${id}`, {
+        const response = await fetchWithAuth(`/flashcards/${id}`, { 
             method: 'PUT',
-            headers: {
-                'Content-Type': 'application/json',
-                'Authorization': `Bearer ${localStorage.getItem('token')}`
-            },
             body: JSON.stringify(flashcardSet)
-        });
+        }) 
 
         const data = await response.json();
 
@@ -113,12 +96,7 @@ export const updateFlashcardSet = async (id, flashcardSet) => {
 
 export const deleteFlashcardSet = async (id) => {
     try {
-        const response = await fetch(`${API_URL}/flashcards/${id}`, {
-            method: 'DELETE',
-            headers: {
-                'Authorization': `Bearer ${localStorage.getItem('token')}`
-            }
-        });
+        const response = await fetchWithAuth(`/flashcards/${id}`, { method: 'DELETE'});
 
         const data = await response.json();
 

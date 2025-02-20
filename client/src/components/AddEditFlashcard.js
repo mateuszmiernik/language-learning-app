@@ -165,7 +165,7 @@ const AddEditFlashcard = () => {
 
                 {/* Flashcards */}
                 {flashcards.length > 0 && (
-                    <DragDropContext onDragEnd={handleDragEnd}>
+                    <DragDropContext onDragEnd={handleDragEnd} >
                         <Droppable droppableId='flashcards'>
                             {(provided) => (
                                 <div ref={provided.innerRef} {...provided.droppableProps}>
@@ -174,12 +174,13 @@ const AddEditFlashcard = () => {
                                             key={flashcard._id || flashcard.id}
                                             draggableId={flashcard._id || flashcard.id}
                                             index={index}
+                                            isDragDisabled={ isViewMode ? true : false}
                                         >
                                             {(provided) => (
                                                 <div
                                                     ref={provided.innerRef}
                                                     {...provided.draggableProps}
-                                                    {...(!isViewMode ? provided.dragHandleProps : {})} // Blokujemy przeciąganie w trybie podglądu
+                                                    {...provided.dragHandleProps}
                                                     className="mb-4 p-4 bg-gray-100 rounded shadow"
                                                 >
                                                     <div className='flex justify-between items-center mb-2'>
