@@ -113,7 +113,7 @@ const AddEditFlashcard = () => {
     // console.log("AddEditFlashcard.js - Flashcards - IDs:", flashcards.map(f => f._id));
 
     return (
-        <div className='min-h-screen flex items-center justify-center'>
+        <div className='min-h-screen flex items-center justify-center py-10'>
             <Link to={id ? `/flashcards/${id}` : '/flashcards'} className='absolute top-4 left-4 z-10 p-2 rounded-full hover:bg-gray-200 transition'>
                 <ArrowLeftIcon className="h-6 w-6 text-gray-500" />
             </Link>

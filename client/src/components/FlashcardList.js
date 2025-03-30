@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { Link} from 'react-router-dom';
+import { Link } from 'react-router-dom';
 import { getFlashcardSet } from'../api/FlashcardApi';
 
 const FlashcardList = () => {
@@ -21,8 +21,8 @@ const FlashcardList = () => {
 
     return (
         <div className='mt-4'>
-            {message && <p className='text-red-500'>{message}</p>}
-            {flashcardSets.length === 0 ? (
+            {message ? (<p className='text-red-500'>{message}</p>) :
+            flashcardSets.length === 0 ? (
                 <p>No flashcard sets available. Create one!</p>
             ) :
             flashcardSets.map((set) => (

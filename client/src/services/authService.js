@@ -46,6 +46,8 @@ export const refreshAccessToken = async () => {
             body: JSON.stringify({ refreshToken })
         });
 
+        console.log('Refresh response:', res);
+
         if (!res.ok) {
             console.error('Refresh failed. Logging out.');
             logout(); // Usunięcie tokenów

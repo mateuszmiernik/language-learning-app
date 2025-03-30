@@ -37,7 +37,7 @@ export const getFlashcardSet = async () => {
             throw new Error(data.message || 'Failed to fetch flashcard set(s)');
         }
 
-        console.log('FlashcardApi.js - getFlashcardSet:', data);
+        // console.log('FlashcardApi.js - getFlashcardSet:', data);
 
         // Mapowanie `_id` na `id`
         const mappedData = data.map(set => ({

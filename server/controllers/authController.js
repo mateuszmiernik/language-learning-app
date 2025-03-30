@@ -94,7 +94,7 @@ const refreshAccessToken = async (req, res) => {
         res.json({ accessToken: newAccessToken });
     } catch (error) {
         console.log(("Refresh token error:", error));
-        res.statsu(403).json({ message: "Invalid or expired refresh token" });
+        res.status(403).json({ message: "Invalid or expired refresh token" });
     }
 };
 
@@ -103,7 +103,7 @@ const logoutUser = async (req, res) => {
 
     try {
         // Znajdź użytkownika i usuń jego refresh token
-        await User.updateOne({ refreshToken }, { rehreshToken: null });
+        await User.updateOne({ refreshToken }, { refreshToken: null });
 
         res.json({message: 'Logout successful' });
     } catch (error) {

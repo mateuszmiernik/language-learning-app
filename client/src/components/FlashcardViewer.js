@@ -2,7 +2,9 @@ import { useState, useEffect } from 'react';
 import { useParams, Link, useNavigate } from 'react-router-dom';
 import { getFlashcardSetById } from '../api/FlashcardApi';
 import { deleteFlashcardSet } from '../api/FlashcardApi';
-import { ArrowLeftIcon } from "@heroicons/react/24/outline";
+import DropdownMenu from '../components/DropdownMenu';
+import { ArrowRightIcon, ArrowLeftIcon } from "@heroicons/react/24/outline";
+
 
 const FlashcardViewer = () => {
     const { id } = useParams();
@@ -67,28 +69,27 @@ const FlashcardViewer = () => {
                 <ArrowLeftIcon className="h-6 w-6 text-gray-500" />
             </Link>
 
-            <div className="flex flex-col items-start">
+            <div className="flex flex-col items-start w-96">
                 {/* TOOLBAR */}
-                <div className='w-full flex justify-between items-center mb-6'>
-                    <div className=''>
-                        <h1 className='text-3xl font-bold text-gray-900'>{title}</h1>
-                        <p className='text-gray-600'>{description}</p>
+                <div className='w-full flex justify-between items-center mb-4'>
+                    <h1 className='text-3xl font-bold text-gray-900'>{title}</h1>
+                    
+                    <div className='flex space-x-2'>
+                        <DropdownMenu id={id} openDeleteModal={openDeleteModal} />
+                        {/* <button 
+                            type='button' 
+                            onClick={openDeleteModal}
+                            className="group p-2 rounded-full bg-transparent hover:bg-red-100 transition-all duration-300 ease-in-out"
+                        >
+                            <TrashIcon className="h-5 w-5 text-gray-500 transition-transform duration-300 ease-in-out group-hover:text-red-500 group-hover:scale-110" />
+                        </button> */}
                     </div>
-
-                    <Link to={`/flashcards/${id}/view`} className='btn btn-primary'>
-                        View
-                    </Link>
-
-                    <Link to={`/flashcards/${id}/edit`} className='btn btn-primary'>
-                        Edit
-                    </Link>
-                    <button type='button' onClick={openDeleteModal}>
-                        Delete
-                    </button>
                 </div>
 
+                <p className='text-gray-600 w-full break-words overflow-hidden whitespace-normal'>{description}</p>
+
                 {flashcards.length > 0 ? (
-                    <div className="relative w-96 h-56 cursor-pointer" onClick={handleFlip}>
+                    <div className="relative w-96 h-56 cursor-pointer mt-4" onClick={handleFlip}>
                         <div
                             className="relative w-full h-full rounded-lg shadow-lg"
                             style={{
@@ -121,9 +122,13 @@ const FlashcardViewer = () => {
 
 
                 <div className='mt-6 flex items-center space-x-4 w-full justify-center'>
-                    <button className='bg-gray-300 text-gray-700 px-4 py-2 rounded-lg shadow-md' onClick={handlePrevious}>Previous</button>
+                    <button className='bg-gray-300 text-gray-700 px-4 py-2 rounded-lg shadow-md' onClick={handlePrevious}>
+                        <ArrowLeftIcon className="h-6 w-6 text-gray-500" />
+                    </button>
                     <p>{`${currentIndex + 1} / ${flashcards.length}`}</p>
-                    <button className='bg-blue-500 text-white px-4 py-2 rounded-lg shadow-md' onClick={handleNext}>Next</button>
+                    <button className='bg-gray-300 text-white px-4 py-2 rounded-lg shadow-md' onClick={handleNext}>
+                        <ArrowRightIcon className="h-6 w-6 text-gray-500" />
+                    </button>
                 </div>
             </div>
 

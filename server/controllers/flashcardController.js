@@ -34,10 +34,6 @@ const getFlashcardSets = async (req, res) => {
         // Pobieramy wszystkie zestawy należące do użytkownika
         const flashcardSets = await FlashcardSet.find({ userId });
 
-        if (!flashcardSets || flashcardSets.length === 0) {
-            return res.status(404).json({ message: 'No flashcard sets found '});
-        }
-
         // Zwracamy zestawy fiszek w odpowiedzi
         res.status(200).json(flashcardSets);
     } catch (error) {
