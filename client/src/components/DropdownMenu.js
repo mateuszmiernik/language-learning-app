@@ -14,7 +14,10 @@ const DropdownMenu = ({ id, openDeleteModal }) => {
                 <EllipsisVerticalIcon className='h-6 w-6 text-gray-500 '/>
             </button>
             {isOpen && (
-                <div className='absolute right-0 mt-2 w-36 bg-white shadow-lg rounded-lg border z-50'>
+                <div 
+                    className='absolute right-0 mt-2 w-36 bg-white shadow-lg rounded-lg border z-50'
+                    onMouseDown={(e) => e.preventDefault()}
+                >
                     {/* Link do edycji */}
                     <Link
                         to={`/flashcards/${id}/edit`}
